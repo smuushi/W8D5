@@ -15,20 +15,38 @@ const sum2 = function (...args) {
 }
 // console.log(sum2(1, 2, 3, 4))
 
-Function.prototype.myBind = function (ctx) {
+Function.prototype.myBind = function(ctx, ...bindArgs){
+  
+  let that = this
+  // let arguments = all the extra stuff... 
+
+  if (bindArgs.length === 0) {
+    return function() {
+      that.call(ctx, ...arguments);
+    };
+  } else {
+    return function() {
+      that.call(ctx, ...bindArgs, ...arguments)
+    };
+  };
+
+}
+
+let func = function (arg1, arg2) {
+  // console.log( `${this.name}`)
   debugger
-  let val = this; 
-  // if ( arguments.length === 1) {
-    return function (ctx) {
-      ctx.val()
-    }
-//}
-  // return val;
+  if (arguments.length > 0) {
+    console.log(`${this.name} does ${arg1} and ${arg2}`)
+  } else {
+    console.log(`${this.name}`)
+  }
 }
 
-let func = function (){
-  console.log( `${this.name} `)
-}
-let bindTest = func.myBind({name: "test"})
+let bindTest = func.myBind({name: "test"}, "ghi")
 
-console.log(bindTest())
+let theirBind = func.bind({name: 'their_bind'}, "asddddf")
+
+// bindTest("asdf")
+
+theirBind()
+
